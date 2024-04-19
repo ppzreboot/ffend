@@ -1,0 +1,34 @@
+import Layout from '../layouts/index.astro'
+import { app_name } from '../common/const'
+
+<Layout title='第零章 最重要的一章'>
+  我给我正在写的这些文字，起了个名字叫“{app_name}”。
+  是因为，前端程序员有一个优势：比较熟悉 js，而 js 是可以写后端的。
+  这样，可以少学一门编程语言，而专注于编程语言之外的东西。
+
+  最初，**js 只能在浏览器里运行**。
+  后来有了 `Node.js`。
+  不得不说，太多人对 `Node.js` 有严重的误解：“~~Node.js 是一个 js 框架~~”。
+  `Node.js` 的真实身份，正式的说法是“一个 **js 运行时**”，但“运行时”是什么？
+  
+  简单地说，`Node.js` 是一个执行 js 代码的程序。
+  也就是说，我们用 js 写了一个程序，可以用 `Node.js` 让这个程序跑起来。
+  比如，我们把一些代码写在一个叫 `hello.js` 的文件里。
+  如果你的电脑上已经安装 `Node.js`，那么你就可以：
+  ``` bash
+  node hello.js
+  ```
+
+  我们可以在服务器上安装 `Node.js`，
+  就像安装 Python、Ruby 差不多，
+  然后把我们的 web 后端程序放到某个目录里，
+  然后用 `Node.js` 执行它，
+  一个 web 后端服务就起来了。
+
+  ## 安装 Node.js
+  + 打开 https://nodejs.org/en/download
+  + 点那个绿色的 `Download Node.js xxx` 按钮，你会下载一个安装包
+  + 下载完成后，双击安装包就可以了，我想你知道怎么做
+
+  > 这里，我见到过很多有意思的事，有很多人因为“安装 `Node.js` 太简单”，所以瞧不起 `Node.js`，认为“一看就不如 Java”，，，，唉……
+</Layout>
