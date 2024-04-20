@@ -15,5 +15,8 @@
     "astro": "^4.6.3",
     "last.css": "^0.3.2",
     "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7"
   }
 }

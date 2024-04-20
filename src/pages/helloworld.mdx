@@ -1,0 +1,29 @@
+import Layout from '../layouts/index.astro'
+
+<Layout title='第一章 Hello, Node.js'>
+  下面的代码，可能会有点陌生，但请先尝试读一下，我会马上介绍其中的细节。
+
+  ``` js
+  const http = require('http')
+
+  function handle(req, res) {
+    res.write('Hello, Node.js')
+    res.end()
+  }
+
+  const server = http.createServer(handle)
+  server.listen(8080)
+  console.log('ok')
+  ```
+
+  我想激动地告诉你，这已经是一个 `Node.js` 后端程序了。
+  你可以复制上面的代码，粘贴到某个文件里（比如 hello.js），然后在命令行：
+
+  ``` bash
+  node hello.js
+  ```
+
+  当看到控制台打印出 `ok` 时，这个后端程序已经起来了。
+  现在你可以在浏览器输入 http://127.0.0.1:8080/ 来访问这个服务器了。
+
+</Layout>
