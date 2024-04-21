@@ -2,11 +2,15 @@
 import { app_name } from '../common/const'
 import 'last.css'
 
-interface Props {
-	title: string;
-}
+const { title: _title, index } = Astro.props.frontmatter
+const title = `第${{
+	0: '零', 1: '一', 2: '二', 3: '三',
+	4: '四', 5: '五', 6: '六', 7: '七',
+	8: '八',
+}[index as number]}章 ${_title}`
 
-const { title } = Astro.props;
+const pages = (await Astro.glob('../pages/*'))
+	.sort((a, b) => a.frontmatter.index - b.frontmatter.index)
 ---
 
 <!doctype html>
@@ -20,6 +24,18 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
+		<nav>
+			<ul>
+				{pages.map(page =>
+					<li>{page.frontmatter.title == _title
+						? page.frontmatter.title
+						: <a href={page.url}>
+							{page.frontmatter.title}
+						</a>
+					}</li>
+				)}
+			</ul>
+		</nav>
 		<article class="simple_style">
 			<h2>{title}</h2>
 			<slot />
@@ -55,16 +71,30 @@ const { title } = Astro.props;
 			Courier New,
 			monospace;
 	}
-	body > article {
+</style>
+
+<style>
+	article {
 		max-width: 800px;
 		margin: 0 auto;
+	}
+	nav {
+		position: fixed;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 300px;
+		background: rgba(var(--fc), .06);
 	}
 	@media (max-width: 800px) {
 		h2 {
 			margin-top: 1em;
 		}
-		body > article {
+		article {
 			padding: 0 1rem;
+		}
+		nav {
+			display: none;
 		}
 	}
 </style>

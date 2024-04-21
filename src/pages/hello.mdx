@@ -1,81 +1,83 @@
+---
+layout: ../layouts/index.astro
+title: Hello, Node.js
+index: 1
+---
+
 import { Code } from 'astro-expressive-code/components'
-import Layout from '../layouts/index.astro'
 import demo_code from '../../demo/helloworld/index.js?raw'
 
-<Layout title='第一章 Hello, Node.js'>
-  下面的代码，可能会有点陌生，但请先尝试读一下，我会马上介绍其中的细节。
+下面的代码，可能会有点陌生，但请先尝试读一下，我会马上介绍其中的细节。
 
-  <Code code={demo_code} lang='js' title='hello.js' showLineNumbers />
+<Code code={demo_code} lang='js' title='hello.js' showLineNumbers />
 
-  我想激动地告诉你，这已经是一个完整的 `Node.js` 后端程序了。
-  你可以复制上面的代码，粘贴到某个文件里（比如 hello.js），然后在命令行：
+我想激动地告诉你，这已经是一个完整的 `Node.js` 后端程序了。
+你可以复制上面的代码，粘贴到某个文件里（比如 hello.js），然后在命令行：
 
-  ``` bash showLineNumbers=false
-  node hello.js
-  ```
+``` bash showLineNumbers=false
+node hello.js
+```
 
-  当看到控制台打印出 `ok` 时，这个后端程序已经起来了。
-  现在你可以在浏览器输入 http://127.0.0.1:8080/ 来访问这个服务器了。
-  下面我来介绍一下这几行代码。
+当看到控制台打印出 `ok` 时，这个后端程序已经起来了。
+现在你可以在浏览器输入 http://127.0.0.1:8080/ 来访问这个服务器了。
+下面我来介绍一下这几行代码。
 
-  ### 第一行
-  前端程序员应该不陌生：js 的世界里，存在两种模块化方案：cjs 和 esm。  
-  而 `const http = require('http')` 是 `Node.js` 默认的方案。
+### 第一行
+前端程序员应该不陌生：js 的世界里，存在两种模块化方案：cjs 和 esm。  
+而 `const http = require('http')` 是 `Node.js` 默认的方案。
 
-  不管是 `import` 还是 `require` 我们都知道是“导入”某模块或库，
-  比如前端常见的 `import React from 'react'` 是导入 React。
-  而 `react`，一般是通过 npm 安装的：
+不管是 `import` 还是 `require` 我们都知道是“导入”某模块或库，
+比如前端常见的 `import React from 'react'` 是导入 React。
+而 `react`，一般是通过 npm 安装的：
 
-  ``` bash showLineNumbers=false
-  npm install react
-  ```
+``` bash showLineNumbers=false
+npm install react
+```
 
-  npm 会帮我们下载 react，然后放到 node_modules 文件夹里。  
-  那么 `const http = require('http')` 里的 `http` 模块是哪来的呢？  
-  答：是 `Node.js` 里的。
+npm 会帮我们下载 react，然后放到 node_modules 文件夹里。  
+那么 `const http = require('http')` 里的 `http` 模块是哪来的呢？  
+答：是 `Node.js` 里的。
 
-  就像我们在写前端代码时，可以使用 `window`, `document`, `fetch`, `localStorage`……  
-  我们把这些东西叫做浏览器的“**内置对象**”。  
+就像我们在写前端代码时，可以使用 `window`, `document`, `fetch`, `localStorage`……  
+我们把这些东西叫做浏览器的“**内置对象**”。  
 
-  而 `http` 模块是 `Node.js` 的“**内置模块**”。  
+而 `http` 模块是 `Node.js` 的“**内置模块**”。  
 
-  重点来了：
-  + 前端代码是运行在浏览器里的，而我们现在写的 `hello.js` 是运行在 `Node.js` 里的
-  + `Node.js` 和浏览器是两个不一样的“js 代码解释器”，或者换句话说，是两个不同的“执行 js 程序的程序”
+重点来了：
++ 前端代码是运行在浏览器里的，而我们现在写的 `hello.js` 是运行在 `Node.js` 里的
++ `Node.js` 和浏览器是两个不一样的“js 代码解释器”，或者换句话说，是两个不同的“执行 js 程序的程序”
 
-  而 `http 模块` 里包含一些处理 “http 通信” 的东西：
-  + 发送 http 请求，就像在前端常用的 axios 或 fetch
-  + 接收 http 请求，这是前端没有的功能
+而 `http 模块` 里包含一些处理 “http 通信” 的东西：
++ 发送 http 请求，就像在前端常用的 axios 或 fetch
++ 接收 http 请求，这是前端没有的功能
 
-  接收 http 请求？这是 `hello.js` 的第 3 到 10 行。
+接收 http 请求？这是 `hello.js` 的第 3 到 10 行。
 
-  ### 第 3~8 行
-  <Code code={demo_code} lang='js' title='hello.js' showLineNumbers mark={[3,4,5,6,7,8]} />
+### 第 3~8 行
+<Code code={demo_code} lang='js' title='hello.js' showLineNumbers mark={[3,4,5,6,7,8]} />
 
-  这 6 行代码，很像前端添加“点击事件”监听器：
-  ``` js
-  document.getElementById('target').addEventListener('click', () => {
-    // 这里的代码，在“用户点击”后执行
-    console.log('点了一下')
-  })
-  ```
-  而这 6 行代码的意思是：当收到 http 请求，执行：
-  ``` js
-  console.log('收到请求', new Date()) // 打印日志
-  res.write('Hello, Node.js') // 回信内容（响应内容）
-  res.end() // 回信完毕
-  ```
+这 6 行代码，很像前端添加“点击事件”监听器：
+``` js
+document.getElementById('target').addEventListener('click', () => {
+  // 这里的代码，在“用户点击”后执行
+  console.log('点了一下')
+})
+```
+而这 6 行代码的意思是：当收到 http 请求，执行：
+``` js
+console.log('收到请求', new Date()) // 打印日志
+res.write('Hello, Node.js') // 回信内容（响应内容）
+res.end() // 回信完毕
+```
 
-  不管收到的是什么请求、附带了什么数据，都响应 `Hello, Node.js`。
-  所以，你可以打开 postman，尝试发一个 POST 请求，或一个怪异的 url，再加一些数据，
-  只要 ip 和 端口号不变，这个请求就能到 hello.js 这个程序里，就只能返回 `Hello, Node.js`。
+不管收到的是什么请求、附带了什么数据，都响应 `Hello, Node.js`。
+所以，你可以打开 postman，尝试发一个 POST 请求，或一个怪异的 url，再加一些数据，
+只要 ip 和 端口号不变，这个请求就能到 hello.js 这个程序里，就只能返回 `Hello, Node.js`。
 
-  ### 第 10 行
-  在第 3~8 行，我们创建了一个 http server 对象，
-  创建后，它不会马上开始工作，
-  而是等我们调用 `server.listen()` 方法后，才正式开始。
+### 第 10 行
+在第 3~8 行，我们创建了一个 http server 对象，
+创建后，它不会马上开始工作，
+而是等我们调用 `server.listen()` 方法后，才正式开始。
 
-  在第 10 行，我们调用了 `server.listen()` 方法，并顺便传过去一个端口号（8080），
-  于是这个后端程序就开始工作了。
-
-</Layout>
+在第 10 行，我们调用了 `server.listen()` 方法，并顺便传过去一个端口号（8080），
+于是这个后端程序就开始工作了。
