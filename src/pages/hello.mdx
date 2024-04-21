@@ -56,9 +56,8 @@ import demo_code from '../../demo/helloworld/index.js?raw'
   + 前端代码是运行在浏览器里的，而我们现在写的 `hello.js` 是运行在 `Node.js` 里的
   + `Node.js` 和浏览器是两个不一样的“js 代码解释器”，或者换句话说，是两个不同的“执行 js 程序的程序”
 
-  > 到这里，本章、所有章的重点都讲完了，请舒一口气后继续。
-
-  `http 模块` 里包含一些处理 “http 通信” 相关的东西：
+  ##### 细说 http 模块
+  `http 模块` 里包含一些处理 “http 通信” 的东西：
   + 发送 http 请求，就像在前端常用的 axios 或 fetch
   + 接收 http 请求，这是前端没有的功能
 
@@ -105,7 +104,7 @@ import demo_code from '../../demo/helloworld/index.js?raw'
   res.end() // 回信完毕
   ```
 
-  这两行代码，不管收到的是什么请求、附带了什么数据，都响应 `Hello, Node.js`。
+  不管收到的是什么请求、附带了什么数据，都响应 `Hello, Node.js`。
   所以，你可以打开 postman，尝试发一个 POST 请求，或一个怪异的 url，再加一些数据，
   只要 ip 和 端口号不变，这个请求就能到 hello.js 这个程序里，就只能返回 `Hello, Node.js`。
 
