@@ -47,17 +47,19 @@ import demo_code from '../../demo/helloworld/index.js?raw'
   + 发送 http 请求，就像在前端常用的 axios 或 fetch
   + 接收 http 请求，这是前端没有的功能
 
-  接收 http 请求？这是 `hello.js` 的第 3 到 9 行。
+  接收 http 请求？这是 `hello.js` 的第 3 到 10 行。
 
   ### 第 3~8 行
-  这 5 行代码，很像前端添加“点击事件”监听器：
+  <Code code={demo_code} lang='js' title='hello.js' showLineNumbers mark={[3,4,5,6,7,8]} />
+
+  这 6 行代码，很像前端添加“点击事件”监听器：
   ``` js
   document.getElementById('target').addEventListener('click', () => {
-    // 这里的代码，在“用户点击”后会执行
+    // 这里的代码，在“用户点击”后执行
     console.log('点了一下')
   })
   ```
-  而这 5 行代码的意思是：当收到 http 请求，执行：
+  而这 6 行代码的意思是：当收到 http 请求，执行：
   ``` js
   console.log('收到请求', new Date()) // 打印日志
   res.write('Hello, Node.js') // 回信内容（响应内容）
@@ -68,12 +70,12 @@ import demo_code from '../../demo/helloworld/index.js?raw'
   所以，你可以打开 postman，尝试发一个 POST 请求，或一个怪异的 url，再加一些数据，
   只要 ip 和 端口号不变，这个请求就能到 hello.js 这个程序里，就只能返回 `Hello, Node.js`。
 
-  #### 第 9 行
+  #### 第 10 行
   在第 3~8 行，我们创建了一个 http server 对象，
   创建后，它不会马上开始工作，
   而是等我们调用 `server.listen()` 方法后，才正式开始。
 
-  在第 9 行，我们调用了 `server.listen()` 方法，并顺便传过去一个端口号（8080），
+  在第 10 行，我们调用了 `server.listen()` 方法，并顺便传过去一个端口号（8080），
   于是这个后端程序就开始工作了。
 
 </Layout>
