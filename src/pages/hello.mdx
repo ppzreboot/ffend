@@ -67,7 +67,7 @@ document.getElementById('target').addEventListener('click', () => {
 ``` js
 console.log('收到请求', new Date()) // 打印日志
 res.write('Hello, Node.js') // 回信内容（响应内容）
-res.end() // 回信完毕
+res.end() // 回信完毕，相当于上一章 “带饭请求” 和 “拒绝带饭” 里的 “over”
 ```
 
 不管收到的是什么请求、附带了什么数据，都响应 `Hello, Node.js`。
