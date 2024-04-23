@@ -48,7 +48,7 @@ const pages = (await Astro.glob('../pages/*'))
 		<aside>
 			<h5>{title}</h5>
 			<ul>
-				{Astro.props.headings.map(h =>
+				{Astro.props.headings.map((h: any) =>
 					<li>
 						<a href={'#' + h.slug}>{h.text}</a>
 					</li>
