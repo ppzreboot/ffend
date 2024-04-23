@@ -40,6 +40,16 @@ const pages = (await Astro.glob('../pages/*'))
 			<h2>{title}</h2>
 			<slot />
 		</article>
+		<aside>
+			<h5>{title}</h5>
+			<ul>
+				{Astro.props.headings.map(h =>
+					<li>
+						<a href={h.slug}>{h.text}</a>
+					</li>
+				)}
+			</ul>
+		</aside>
 	</body>
 </html>
 <style is:global>
@@ -93,7 +103,9 @@ const pages = (await Astro.glob('../pages/*'))
 			width: 800px;
 			margin: 0 auto;
 		}
-		/* aside 紧挨着 article 右边 */
+		aside {
+			left: calc(50vw + 500px);
+		}
 	}
 	@media (1100px <= width < 1440px) { /* nav 放不开了，article 靠左，aside 在右 */
 		nav {
@@ -103,7 +115,20 @@ const pages = (await Astro.glob('../pages/*'))
 			width: 800px;
 			margin: 0 100px;
 		}
-		/* aside 紧挨着 article 右边 */
+		aside {
+			left: 1000px;
+		}
+	}
+	@media (1100px <= width) {
+		aside {
+			position: fixed;
+			top: 200px;
+		}
+		aside ul {
+			padding-left: 0;
+			margin: 0;
+			list-style: none;
+		}
 	}
 	@media (width < 1100px) { /* aside 也放不开了，article 居中 */
 		article {
