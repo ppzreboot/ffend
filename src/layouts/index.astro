@@ -2,12 +2,12 @@
 import { app_name } from '../common/const'
 import 'last.css'
 
-const { title: _title, index } = Astro.props.frontmatter
-const title = `第${{
+const { title, index, subtitle } = Astro.props.frontmatter
+const chapter_index = `第${{
 	0: '零', 1: '一', 2: '二', 3: '三',
 	4: '四', 5: '五', 6: '六', 7: '七',
 	8: '八', 9: '九', 10: '十',
-}[index as number]}章 ${_title}`
+}[index as number]}章`
 
 const pages = (await Astro.glob('../pages/*'))
 	.sort((a, b) => a.frontmatter.index - b.frontmatter.index)
@@ -27,17 +27,22 @@ const pages = (await Astro.glob('../pages/*'))
 		<nav>
 			<ul>
 				{pages.map(page =>
-					<li>{page.frontmatter.title == _title
-						? page.frontmatter.title
+					<li>{page.frontmatter.title == title
+						? <span class='current'>{page.frontmatter.title}</span>
 						: <a href={page.url}>
-							{page.frontmatter.title}
+							<span>{page.frontmatter.title}</span>
+							<span class='arrow'>&gt;</span>
 						</a>
 					}</li>
 				)}
 			</ul>
 		</nav>
 		<article class="simple_style">
-			<h2>{title}</h2>
+			<h2>
+				<span class='index'>{chapter_index}</span>
+				<span class='name'>{title}</span>
+				<span class='subtitle'>{subtitle}</span>
+			</h2>
 			<slot />
 		</article>
 		<aside>
@@ -45,7 +50,7 @@ const pages = (await Astro.glob('../pages/*'))
 			<ul>
 				{Astro.props.headings.map(h =>
 					<li>
-						<a href={h.slug}>{h.text}</a>
+						<a href={'#' + h.slug}>{h.text}</a>
 					</li>
 				)}
 			</ul>
@@ -84,6 +89,23 @@ const pages = (await Astro.glob('../pages/*'))
 </style>
 
 <style>
+	h2 {
+		font-weight: normal;
+	}
+	h2 .index {
+		margin-right: 1rem;
+	}
+	h2 .subtitle {
+		margin-left: .5em;
+		font-size: 1rem;
+	}
+	article {
+		padding-bottom: 166px;
+	}
+	nav, aside {
+		font-size: 14px;
+	}
+
 	@media (1440px <= width) { /* nav 和 aside 都有，article 居中，nav 在左，aside 再右 */
 		nav {
 			position: fixed;
@@ -96,8 +118,30 @@ const pages = (await Astro.glob('../pages/*'))
 		nav ul {
 			list-style: none;
 			padding-left: 0;
-			margin: 6px 0;
-			line-height: 2;
+			margin: 10px 0;
+			line-height: 2.2;
+		}
+		nav .current {
+			padding: 0 1rem;
+		}
+		nav a {
+			display: flex;
+			align-items: center;
+			padding: 0 1rem;
+			justify-content: space-between;
+			text-decoration: none;
+		}
+		nav a span.arrow {
+			opacity: .3;
+			color: rgb(var(--fc));
+			font-weight: 100;
+			font-size: 12px;
+		}
+		nav a:hover {
+			background-color: rgba(var(--fc), .06);
+		}
+		nav a:hover span.arrow {
+			opacity: .6;
 		}
 		article {
 			width: 800px;
