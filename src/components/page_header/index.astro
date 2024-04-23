@@ -24,7 +24,6 @@ header {
 }
 h1 {
     font-size: 14px;
-    font-weight: normal;
     margin: 0;
 }
 a {
@@ -50,11 +49,16 @@ a {
         bottom: 0;
         z-index: -1;
     }
+    h1 {
+        font-weight: normal;
+    }
     .header_placeholder {
         height: var(--header-height);
         width: 10px;
     }
 }
 @media (width < 800px) {
+    h1 {
+    }
 }
 </style>

@@ -64,7 +64,6 @@ const pages = (await Astro.glob('../pages/*'))
 		box-sizing: border-box;
 	}
 	:root {
-		--header-height: 50px;
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;
 		--accent-dark: 49, 10, 101;
@@ -75,6 +74,18 @@ const pages = (await Astro.glob('../pages/*'))
 			white 60%
 		);
 	}
+
+	@media (width >= 800px) {
+		:root {
+			--header-height: 50px;
+		}
+	}
+	@media (width < 800px) {
+		:root {
+			--header-height: 36px;
+		}
+	}
+
 	html {
 		font-family: system-ui, sans-serif;
 		background: #13151a;
@@ -182,7 +193,8 @@ const pages = (await Astro.glob('../pages/*'))
 	}
 	@media (width < 1100px) { /* aside 也放不开了，article 居中 */
 		article {
-			padding: 0 1rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
 			max-width: 800px;
 			margin: 0 auto;
 		}
