@@ -1,9 +1,14 @@
 ---
 import { app_name } from '../../common/const'
+import Icon_github from './icon_github.astro'
 ---
 
 <header>
     <h1>{app_name}</h1>
+    <!-- qq group -->
+    <a href='https://github.com/ppzreboot/ffend' target='_blank'>
+        <Icon_github />
+    </a>
 </header>
 <div class='header_placeholder'></div>
 
@@ -22,6 +27,9 @@ h1 {
     font-weight: normal;
     margin: 0;
 }
+a {
+    color: inherit;
+}
 
 @media (width >= 800px) {
     header {
@@ -29,6 +37,7 @@ h1 {
         z-index: 10;
         top: 0;
         width: 100vw;
+        padding-right: 2rem;
     }
     header::after {
         background-color: rgb(var(--bc));
