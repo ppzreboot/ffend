@@ -1,0 +1,51 @@
+---
+import { app_name } from '../../common/const'
+---
+
+<header>
+    <h1>{app_name}</h1>
+</header>
+<div class='header_placeholder'></div>
+
+<style>
+header {
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background: rgba(var(--fc), .06);
+    border-bottom: 1px solid rgba(var(--fc), .08);
+}
+h1 {
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+}
+
+@media (width >= 800px) {
+    header {
+        position: fixed;
+        z-index: 10;
+        top: 0;
+        width: 100vw;
+    }
+    header::after {
+        background-color: rgb(var(--bc));
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+    }
+    .header_placeholder {
+        height: var(--header-height);
+        width: 10px;
+    }
+}
+@media (width < 800px) {
+}
+</style>

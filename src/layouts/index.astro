@@ -1,6 +1,7 @@
 ---
 import { app_name } from '../common/const'
 import 'last.css'
+import Header from '../components/page_header/index.astro'
 
 const { title, index, subtitle } = Astro.props.frontmatter
 const chapter_index = `第${{
@@ -24,6 +25,7 @@ const pages = (await Astro.glob('../pages/*'))
 		<title>{title}</title>
 	</head>
 	<body>
+		<Header />
 		<nav>
 			<ul>
 				{pages.map(page =>
@@ -58,7 +60,11 @@ const pages = (await Astro.glob('../pages/*'))
 	</body>
 </html>
 <style is:global>
+	* {
+		box-sizing: border-box;
+	}
 	:root {
+		--header-height: 50px;
 		--accent: 136, 58, 234;
 		--accent-light: 224, 204, 250;
 		--accent-dark: 49, 10, 101;
@@ -110,7 +116,7 @@ const pages = (await Astro.glob('../pages/*'))
 		nav {
 			position: fixed;
 			left: 0;
-			top: 0;
+			top: var(--header-height);
 			bottom: 0;
 			width: 220px;
 			background: rgba(var(--fc), .06);
