@@ -1,0 +1,53 @@
+---
+interface Props {
+    title: string
+    headings: {
+        slug: string
+        text: string
+    }[]
+}
+---
+
+<aside>
+    <h5>{Astro.props.title}</h5>
+    <ul>
+        {Astro.props.headings.map(h =>
+            <li>
+                <a href={'#' + h.slug}>{h.text}</a>
+            </li>
+        )}
+    </ul>
+</aside>
+
+<style>
+aside {
+    font-size: 14px;
+}
+@media (1440px <= width) { /* nav 和 aside 都有，article 居中，nav 在左，aside 再右 */
+    aside {
+			left: calc(50vw + 500px);
+	}
+}
+@media (1100px <= width < 1440px) { /* nav 放不开了，article 靠左，aside 在右 */
+    aside {
+        left: 1000px;
+    }
+}
+@media (1100px <= width) {
+    aside {
+        position: fixed;
+        top: 200px;
+        line-height: 1.5;
+    }
+    aside ul {
+        padding-left: 0;
+        margin: 0;
+        list-style: none;
+    }
+}
+@media (width < 1100px) { /* aside 也放不开了，article 居中 */
+    aside {
+        display: none;
+    }
+}
+</style>
