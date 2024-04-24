@@ -4,6 +4,7 @@ import 'last.css'
 import Header from '../components/page_header/index.astro'
 import Aside from '../components/aside/index.astro'
 import Prev_and_next from '../components/prev_next/index.astro'
+import Footer from '../components/footer/index.astro'
 
 const { title, index, subtitle } = Astro.props.frontmatter
 const chapter_index = `第${{
@@ -54,6 +55,7 @@ const pages: Page[] = (await Astro.glob('../pages/*'))
 			/>
 		</article>
 		<Aside title={title} headings={Astro.props.headings} />
+		<Footer />
 	</body>
 </html>
 <style is:global>
@@ -114,7 +116,7 @@ const pages: Page[] = (await Astro.glob('../pages/*'))
 		font-size: 1rem;
 	}
 	article {
-		padding-bottom: 166px;
+		padding-bottom: 66px;
 	}
 	nav {
 		font-size: 14px;
