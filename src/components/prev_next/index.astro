@@ -1,0 +1,42 @@
+---
+interface Props {
+    pages: Page[]
+    index: number
+}
+const index = Astro.props.index
+const prev = Astro.props.pages[index-1]
+const next = Astro.props.pages[index+1]
+---
+
+<div>
+    {prev
+        ? <span>
+            上一章&nbsp;&nbsp;&nbsp;
+            <a href={prev.url}>{prev.frontmatter.title}</a>
+        </span>
+        : <i />
+    }
+    {next
+        ? <span>
+            下一章&nbsp;&nbsp;&nbsp;
+            <a href={next.url}>{next.frontmatter.title}</a>
+        </span>
+        : <i />
+    }
+</div>
+
+<style>
+div {
+    margin-top: 86px;
+    border-top: 1px solid rgba(var(--fc), .1);
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+span {
+    font-size: 12px;
+}
+a {
+    font-size: 14px;
+}
+</style>
