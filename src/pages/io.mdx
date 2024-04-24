@@ -1,0 +1,90 @@
+---
+layout: ../layouts/index.astro
+title: 收信、回信
+index: 2
+---
+
+import { Code } from 'astro-expressive-code/components'
+import Read_more from '../components/read_more/index.astro'
+import demo_code_1 from '../../demo/io/index.js?raw'
+import demo_code_2 from '../../demo/io/json.js?raw'
+
+### 读短信
+收到前端发来的请求时，后端首先要做的，就是读请求：
++ 请求的方法（比如 `GET`、`POST`、`PUT`、`DELETE`……）
++ 请求的路径（比如 `/user`、`/user?id=2`、`/book`、`/book/2`……）
++ 其他参数（比如“用于身份验证的 token”、“使用的 http 协议版本号”……）
+
+看码：
+<Code code={demo_code_1} lang='js' title='读取请求' showLineNumbers ins={[5,6,7]} />
+
+不用解释吧，js 写后端就是这么简单直接。
+
+> 我想你已经注意到了，上面的 `req` 和 `res` 对象分别代表 request（请求）和 response（响应）。
+> 如果你想读取前端发来的数据，就去 `req` 里找；想返回数据给前端，就使用 `res`。
+
+### 回短信
+要注意：“回”短信，是回复。在 http 通信中，**后端只能回复**。
+没有请求时，后端就在那等着，啥也不干。
+就像前端里，添加点击事件后，只要用户不点按钮，监听器里的代码永远不会执行。
+
+> <Read_more /> `websocket` 可以实现后端“主动”发消息。
+> 但前提是，前端要事先**主动**发起连接、建立连接，这**之后**，后端才能“主动”发消息。
+> `websocket` 不在此小教程讨论范围内。
+
+上面的例子中，回复了一个字符串。当然也可以回复 json：
+<Code
+  code={demo_code_2}
+  lang='js'
+  title='回复 json'
+  showLineNumbers
+  del={[9]}
+  ins={[10,11,12,13,14,15,16,17,18]}
+/>
+
+可以看到，第 18 行，依然是回复一个字符串。
+只不过，是把一个对象，先转化成 json 格式的字符串，然后响应。
+实际上，其他编程语言、后端框架，在响应 json 时，也是一样的，并不存在什么“高级的东西”。
+
+而第 10-12 行，是告诉客户端（前端）：
++ 响应的结果（[状态码](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)）：200 代表成功
++ 响应数据的格式：content（内容） type（类型）是 json
+
+`Content-Type` 用于告知客户端：“响应数据的格式”。
+这样，客户端收到数据时，会根据 `Content-Type` 选择不同的解析方式。
+
+> <Read_more /> 前端使用 axios 时，我们可以得到解析好的数据，
+> 就是因为 axios 会读取响应里的 `Content-Type`，然后使用 `JSON.parse()`。
+> 如果后端不设置 `Content-Type`，axios 是不会自动解析的。
+> 另外，前端使用 [fetch](https://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html) 时，
+> fetch 不会帮我们自动解析数据，我们要手动调用 `.json()` 或 `.text()`，
+> 这种情况下，后端设不设置 `Content-Type` 都无所谓了。
+
+而状态码，是“处理请求”的结果的代号、编号。
+比如：
++ 后端收到的数据，不能解析，或缺字段，就可以响应 400，代表 Bad Request（请求是错的）
++ 后端处理请求的过程中，发生了异常，可以响应 500，代表 Internal Server Error（内部服务端错误）
+
+> <Read_more /> 4xx 状态码表示客户端异常。比如 404 代表“请求了不存在的数据”，401 和 403 代表认证、权限问题。
+> 5xx 状态码表示服务端异常（我们往往要用 try-catch 包裹处理请求的代码，发生异常时，就可以 catch 到异常，然后响应“异常”）。
+
+### 练习查询文档
+> 以下内容，可以跳过
+
+就我个人而言，一直使用的学习方法是（分两步）：
+第一步：先了解概念、流程，大致了解学的东西是什么、有哪些操作。
+相比于“大教程”，这只占用很少的时间。
+
+但细节，在“小教程”里是学不到的。
+但是的但是，在“大教程”里真能学到“细节”？
+虽然大教程里，会介绍细节，但细节之所以称为细节，就是因为细节多、难记。
+除非你经常使用，否则，仅在教程里看一眼、听一句，其实是过目就忘。
+
+所以，我学习时，第二步，也就是“了解大概”之后，
+会去尝试使用它，遇到问题就查文档，或直接用搜索引擎。
+
+比如 `req` 和 `res` 对象的官方文档：
++ req: [http.IncomingMessage](https://nodejs.org/docs/latest/api/http.html#class-httpincomingmessage)
++ res: [http.ServerResponse](https://nodejs.org/docs/latest/api/http.html#class-httpserverresponse)
+
+文档里的内容非常非常多，我们只需要[根据目录](https://nodejs.org/docs/latest/api/http.html)，找我们想知道的就可以了。
