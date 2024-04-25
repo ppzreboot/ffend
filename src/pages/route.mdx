@@ -1,7 +1,77 @@
 ---
 layout: ../layouts/index.astro
-title: 路由
+title: route、router
 index: 3
 ---
 
-TODO
+import Wrong from '../components/wrong.astro'
+import { Code } from 'astro-expressive-code/components'
+import demo_code_1 from '../../demo/route/index.js?raw'
+
+### 前端的 route 和 router
+
+> 如果已经理解 route 和 router，可以跳过
+
+作为前端程序员，只要用过 Vue 或 React，那不会不认识 route 和 router。
+
+**一个 route 是一组对应关系**，比如 `/user` 对应 “用户管理” 页面。
+比如下面是一个常见的 route：
+``` js
+{
+  path: '/user',
+  component: User, // User 是一个 UI 组件
+}
+```
+
+router 不容易理解，错误的说法是 <Wrong content='多组 route（对应关系）构成 router' />。
+
+看 Vue Router 官方文档里的[这个例子](https://router.vuejs.org/guide/#Creating-the-router-instance)：
+``` js
+import { createMemoryHistory, createRouter } from 'vue-router'
+
+import HomeView from './HomeView.vue'
+import AboutView from './AboutView.vue'
+
+const routes = [ // 多个 route 不构成 router，仅仅是 route 的复数形式（route -> routes）
+  { path: '/', component: HomeView },
+  { path: '/about', component: AboutView },
+]
+
+const router = createRouter({
+  history: createMemoryHistory(),
+  routes, // router 里有 routes
+})
+```
+
+简单地说，router 是：
++ 第一点：包含所有 routes 信息
++ 第二点：（请先切换到面向对象思维）给 router 一个 path，router 可以返回一个 Component
+
+后端的 route 和 router 在概念、使用场景上，和前端是一样的。
+
+### 后端的 route
+在前端，不同的按钮，有不同的“点击事件监听函数”。  
+在后端，不同的请求，也有不同的……
+
+作为前端程序员，我想你已经知道怎么区分请求，比如：
++ `GET /user` 可能是“获取所有用户列表”的请求
++ `GET /user?id=1` 可能是“获取 id 为 1 的用户”的请求
++ `POST /user` 可能是“新增用户”的请求
++ `DELETE /user?id=1` 可能是“删除 id 为 1 的用户”的请求
+
+路径相同时，未必是相同的请求。
+还要看 method，甚至要看看参数。
+
+<Code
+  code={demo_code_1}
+  lang='js'
+  title='后端 route'
+  showLineNumbers
+  ins={[
+    { range: '3-7' },
+    { range: '14-17' },
+    { range: '23-30' },
+    { range: '32-38' },
+    { range: '40-47' },
+  ]}
+/>
