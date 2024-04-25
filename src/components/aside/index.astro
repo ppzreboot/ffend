@@ -2,6 +2,7 @@
 interface Props {
     title: string
     headings: {
+        depth: number
         slug: string
         text: string
     }[]
@@ -11,11 +12,14 @@ interface Props {
 <aside>
     <h5>{Astro.props.title}</h5>
     <ul>
-        {Astro.props.headings.map(h =>
-            <li>
-                <a href={'#' + h.slug}>{h.text}</a>
-            </li>
-        )}
+        {Astro.props.headings
+            .filter(h => h.depth === 3) // 只显示大标题
+            .map(h =>
+                <li>
+                    <a href={'#' + h.slug}>{h.text}</a>
+                </li>
+            )
+        }
     </ul>
 </aside>
 
