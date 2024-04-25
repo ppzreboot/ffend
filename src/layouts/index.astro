@@ -102,6 +102,12 @@ const pages: Page[] = (await Astro.glob('../pages/*'))
 			Courier New,
 			monospace;
 	}
+	@media (prefers-color-scheme: dark) {
+		strong {
+			font-weight: normal;
+			text-decoration: underline;
+		}
+	}
 </style>
 
 <style>
