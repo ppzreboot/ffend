@@ -12,16 +12,7 @@ const server = http.createServer((req, res) => {
   console.log(search_params.get('year')) // '3'    参数值都是字符串
   console.log(search_params.get('unreal')) // null    不存在的参数值为 null
 
-  // res.write('Hello, Node.js')
-  res.writeHead(200, {
-    'content-type': 'application/json',
-  })
-  const user = {
-    name: 'PPz',
-    year: 3,
-    adult: false,
-  }
-  res.write(JSON.stringify(user))
+  res.write('Hello, Node.js')
   res.end()
 })
 
