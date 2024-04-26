@@ -13,9 +13,7 @@ const server = http.createServer((req, res) => {
   console.log(search_params.get('unreal')) // null    不存在的参数值为 null
 
   // res.write('Hello, Node.js')
-  res.writeHead(200, {
-    'content-type': 'application/json',
-  })
+  res.setHeader('Content-Type', 'application/json')
   const user = {
     name: 'PPz',
     year: 3,
