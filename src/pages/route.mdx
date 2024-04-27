@@ -1,21 +1,22 @@
 ---
 layout: ../layouts/index.astro
-title: route、router
+title: 路由与异常
 index: 3
 ---
 
 import Wrong from '../components/wrong.astro'
 import { Code } from 'astro-expressive-code/components'
 import demo_code_1 from '../../demo/route/index.js?raw'
+import demo_code_2 from '../../demo/route/error.js?raw'
 
 ### 前端的 route 和 router
 
-> 如果已经理解 route 和 router，可以跳过
+> 如果熟悉 route 和 router，建议跳过
 
 作为前端程序员，只要用过 Vue 或 React，那不会不认识 route 和 router。
 
 **一个 route 是一组对应关系**，比如 `/user` 对应 “用户管理” 页面。
-比如下面是一个常见的 route：
+下面是一个常见的 route：
 ``` js
 {
   path: '/user',
@@ -49,15 +50,16 @@ const router = createRouter({
 
 后端的 route 和 router 在概念、使用场景上，和前端是一样的。
 
-### 后端的 route
-在前端，不同的按钮，有不同的“点击事件监听函数”。  
-在后端，不同的请求，也有不同的……
+### 后端的 route 和 router
+类似地：
++ 在前端，不同的按钮，有不同的 listener
++ 在后端，不同的请求，也有不同 handler（handle: 处理; handler: 处理器，处理者）
 
 作为前端程序员，我想你已经知道怎么区分请求，比如：
-+ `GET /user` 可能是“获取所有用户列表”的请求
-+ `GET /user?id=1` 可能是“获取 id 为 1 的用户”的请求
-+ `POST /user` 可能是“新增用户”的请求
-+ `DELETE /user?id=1` 可能是“删除 id 为 1 的用户”的请求
++ `GET /user` 可能是 “获取所有用户列表” 的请求
++ `GET /user?id=1` 可能是 “获取 id 为 1 的用户” 的请求
++ `POST /user` 可能是 “新增用户” 的请求
++ `DELETE /user?id=1` 可能是 “删除 id 为 1 的用户” 的请求
 
 路径相同时，未必是相同的请求。
 还要看 method，甚至要看看参数。
@@ -69,9 +71,93 @@ const router = createRouter({
   showLineNumbers
   ins={[
     { range: '3-7' },
-    { range: '14-17' },
-    { range: '23-30' },
-    { range: '32-38' },
-    { range: '40-47' },
+    { range: '14-16' },
+    { range: '18' },
+    { range: '24-29' },
+    { range: '31-38' },
+    { range: '40-46' },
   ]}
 />
+
+上面第 3-7 行，是 routes。
+即 “xx 路径、yy method” 的请求由哪个函数来处理。
+
+第 14-16 行，实际是起到一个 router 的作用，
+正经项目中的 router 尽管比这个复杂，但原理跟这两三行代码一样。
+
+第 18 行，从简易 “router” 那里得到 handle 后，
+执行 handle，并把 req 和 res 对象传过去。
+
+第 24-29 行，封装了一个 “用于响应 json” 的函数。
+
+第 31-38 行，处理 `GET /user` 请求。
+
+第 40-46 行，处理 `DELETE /user` 请求。
+
+### 404 和 500
+上面的案例中，为展示最简单的路由，未考虑 “handle 不存在” 和 “handle 执行异常” 这两种情况。
+
+<Code
+  code={demo_code_2}
+  lang='js'
+  title='404 和 500'
+  showLineNumbers
+  ins={[
+    'async ',
+    'await ',
+    { range: '6' },
+    { range: '19-24' },
+    { range: '26' },
+    { range: '28-36' },
+    { range: '66-69' },
+  ]}
+  del={[
+    { range: '27' }
+  ]}
+  collapse='38-64'
+/>
+
+404、500 这种码，前端程序员也不陌生，你一定也见过 200。
+这种三位数字的码叫 http 状态码，一般地：
++ 2xx 代表成功
++ 4xx 代表客户端异常，比如 401，403 分别代表认证、权限问题
++ 5xx 代表服务端异常
+
+但 http 状态码并不常用，
+因为它通常只用于表示通信过程的状态。
+换句话说，当出现 4xx 或 5xx 时，
+不是因为用户少填了字段或什么，
+而是前端或后端的代码出现了 bug。
+
+而且后端业务很复杂时，我想，500-599 这 100 个码可能不够用。
+另外，http 状态码不常用还有历史原因：
+互联网早期，后端响应的状态码不是 200 时，会被网络提供商拦截……
+
+前端程序员对下面的数据结构一定不陌生：
+``` js
+{
+  code: 0,
+  msg: 'success',
+  data: {
+    // ...
+  },
+}
+```
+
+这里面的 code 和 msg 其实是 json 数据的一部分：
+``` js
+res.write(JSON.stringify({
+  code: 0,
+  msg: 'success',
+  data: {
+    // ...
+  },
+}))
+```
+
+code 为 0 代表正确，非 0 代表错误，这在我头一回见时，觉得很奇怪：
+因为往往 0 代表 “假”、“错误”。
+但我细想，成功只有一种，错误却可能千奇百怪：用户少填字段、格式不正确……
+所以用 0 代表正确，用非 0 们代表各种各样的异常。
+
+或者，你把 code 当成 “错误码” 也行：那么 0 就是 “没有错误”。

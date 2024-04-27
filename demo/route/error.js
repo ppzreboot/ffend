@@ -3,10 +3,11 @@ const http = require('http')
 const routes = [
   { method: 'GET', path: '/user', handle: get_user },
   { method: 'DELETE', path: '/user', handle: delete_user },
+  { method: 'POST', path: '/user', handle: create_user },
   // ...
 ]
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   console.log('收到请求', new Date())
   const method = req.method
   const url = new URL(req.url, 'http://' + req.headers.host)
@@ -15,7 +16,24 @@ const server = http.createServer((req, res) => {
     route => route.method == method && route.path == url.pathname
   )
 
-  route.handle(req, res) // 这里先不考虑 handle 不存在的情况
+  if (!route.handle) { // handle 不存在时
+    res.writeHead(404)
+    res.write('未找到资源')
+    res.end()
+    return
+  }
+
+  try {
+    // route.handle(req, res)
+    await route.handle(req, res) // 大部分情况下，handle 都是异步的
+  } catch(err) { // handle 发生异常时
+    console.error(`处理请求 ${method} ${url.pathname} 时，发生异常`)
+    console.error(err)
+    res.writeHead(500)
+    res.write('服务器内部错误')
+    res.end()
+    return
+  }
 })
 
 server.listen(8080)
@@ -37,10 +55,15 @@ function get_user(req, res) {
   respond_json(res, users)
 }
 
-// 用于处理“删除用户”请求
+// 用于处理 “删除用户” 请求
 function delete_user(req, res) {
   // 删除用户
   // 假装已经删除了
-  res.write('ok') // 正式的后端不会只返回 'ok'，但本章先只关注 route 和 router
+  res.write('ok')
   res.end()
+}
+
+// 未实现的 “创建用户”
+function create_user(req, res) {
+  throw Error('现在还不能创建用户')
 }
