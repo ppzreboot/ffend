@@ -134,7 +134,7 @@ const router = createRouter({
 互联网早期，后端响应的状态码不是 200 时，会被网络提供商拦截……
 
 前端程序员对下面的数据结构一定不陌生：
-``` js
+``` js mark={2}
 {
   code: 0,
   msg: 'success',
@@ -145,7 +145,7 @@ const router = createRouter({
 ```
 
 这里面的 code 和 msg 其实是 json 数据的一部分：
-``` js
+``` js mark={2}
 res.write(JSON.stringify({
   code: 0,
   msg: 'success',
