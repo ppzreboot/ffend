@@ -1,0 +1,54 @@
+---
+layout: ../layouts/index.astro
+title: 请求的“附件”
+index: 4
+---
+
+import Wrong from '../components/wrong.astro'
+import { Code } from 'astro-expressive-code/components'
+import demo_code_1 from '../../demo/attachment/index.js?raw'
+
+email 的附件功能很好用，
+收到一个超级大的文件时，
+可以**先阅读文本部分，而不必等附件**下载完毕。
+甚至我们发现附件没什么用时，干脆不下载，节省时间、流量。
+
+假设没有附件的这种机制：  
+email 在附件接收完毕前，
+连是谁发来的都不知道，
+那会怎样？
+
+**可能下载了半天，才能打开邮件，最后发现只是一个垃圾广告，甚至是有害信息**。
+
+在 http 通信中，也有这种机制。
+http 通信中，数据分为两部分：header 和 body。
+[上上一章（收信、回信）](io)中读取的 host、method、path 都在 header 里。
+这一章介绍 “如何读取 http body”。
+
+客户端发送的 body，可能很大，
+因此后端在处理 body 时，
+会在收到 “一小段” 数据后，就立刻交给我们处理。
+看下面的代码你就明白了：
+
+<Code
+    code={demo_code_1}
+    lang='js'
+    title='读 http body'
+    showLineNumbers
+    mark={[
+        { range: '4-11' }
+    ]}
+/>
+
+第 4-6 行，添加了一个监听器：收到一小段数据时，执行第 5 行。
+因为数据量大时，会被分为很多段，因此第 5 行可能会执行多次。
+
+第 7-11 行，添加了另一个监听器：body 接收完毕时，执行 8-10 行。
+因为 “完毕” 只有一次，所以第 8-10 行，只执行一次。
+
+理解了上面的机制，下面的代码就很简单了。
+我想再提醒一次：**理解运行机制、原理更重要，具体的代码不重要**。
+
+### json 数据
+
+### 上传文件
