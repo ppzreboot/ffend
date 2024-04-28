@@ -14,7 +14,7 @@ const chapter_index = `第${{
 }[index as number]}章`
 
 const pages: Page[] = (await Astro.glob('../pages/*'))
-	.filter(a => a.frontmatter.index >= 0)
+	// .filter(a => a.frontmatter.index >= 0)
 	.sort((a, b) => a.frontmatter.index - b.frontmatter.index) as Page[]
 ---
 

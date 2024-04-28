@@ -5,7 +5,7 @@ import expressive_code from 'astro-expressive-code'
 export default
 defineConfig({
   site: 'https://ppzreboot.github.io',
-  base: 'ffend',
+  base: '/ffend',
   integrations: [
     expressive_code(),
     mdx(),
