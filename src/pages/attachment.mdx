@@ -7,6 +7,8 @@ index: 4
 import Wrong from '../components/wrong.astro'
 import { Code } from 'astro-expressive-code/components'
 import demo_code_1 from '../../demo/attachment/index.js?raw'
+import demo_code_2 from '../../demo/attachment/json.js?raw'
+import demo_code_3 from '../../demo/attachment/encapsulation.js?raw'
 
 email 的附件功能很好用，
 附件可能是一个超级大的文件，
@@ -25,6 +27,12 @@ http 通信中，数据分为两部分：header 和 body。
 [上上一章（收信、回信）](./io)中读取的 host、method、path 都在 header 里。
 这一章介绍 “如何读取 http body”。
 
+一般地，以下几种情况，会把数据放在 body，而不是 header 里：
++ 发送 json 数据
++ 发送 form 数据
++ 文件上传
+
+### 读 body
 客户端发送的 body，可能很大，
 因此后端在处理 body 时，
 会在收到 “一小段” 数据后，就立刻交给我们处理。
@@ -40,18 +48,92 @@ http 通信中，数据分为两部分：header 和 body。
     ]}
 />
 
-第 4-6 行，添加了一个监听器：收到一小段数据时，执行第 5 行。
-因为数据量大时，会被分为很多段，因此第 5 行可能会执行多次。
+第 4-6 行，添加了一个监听器：**每**收到一小段数据时，就执行第 5 行。
+数据量大时，会被分为很多段，以便**尽早处理已经收到**的数据，因此第 5 行可能会执行多次。
 
 第 7-11 行，添加了另一个监听器：body 接收完毕时，执行 8-10 行。
 因为 “完毕” 只有一次，所以第 8-10 行，只执行一次。
 
-理解了上面的机制，下面的代码就很简单了。
-我想再提醒一次：**理解运行机制、原理更重要，具体的代码不重要**。
+尽管上面的代码没有实际用途，
+但是用最少的代码展示了 Node.js 读取 body 的机制。
+下面读 json 的案例，尽管更实用一些，但不过只是技术细节，并不重要。
 
-### json 数据
-``` js
+### 读 body 里的 json 数据
+客户端往往这样发送 json：
 
+``` js "body"
+fetch('/user', {
+    method: 'POST',
+    body: JSON.stringify({
+        name: 'PPz',
+        year: 3,
+    }),
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
 ```
 
-### 上传文件
+> 这里又碰到了 `Content-Type`。实际上是非必需的，但有些库会读取 `Content-Type`，自动解析 body。
+
+> axios 发送 json 时，当然也不例外。但 axios 封装程度较高，隐藏了一些细节，所以不好直接从代码观察。
+
+在后端，只要把收到的所有 “一小段” 拼接在一起就可以了：
+
+<Code
+    code={demo_code_2}
+    lang='js'
+    title='读 http body 里的 json'
+    showLineNumbers
+    mark={[
+        { range: '7-10' },
+        { range: '12-17' },
+    ]}
+/>
+
+而大多数 json 数据并不大，
+所以 `req.on('data', chunk => ...)``` 很多时候只执行一次。
+
+### 封装 read_json 函数
+可以把读取 json 的代码，写在一个函数里：
+
+<Code
+    code={demo_code_3}
+    title='read_json'
+    lang='js'
+    showLineNumbers
+    mark={[
+        'async ',
+        { range: '5' },
+        { range: '14-25' },
+    ]}
+/>
+
+另外还有两种异常：
++ 数据**传输过程中**出现异常（比如传输中断）
++ 数据**解析时**出现异常（非法 json）
+
+于是可以给 read_json 加上异常处理代码：
+``` js ins={7-10,12,15-18}
+function read_json(req) {
+    return new Promise((resolve, reject) => {
+        let body = ''
+        req.on('data', chunk => {
+            body += chunk
+        })
+        req.on('error', err => {
+            console.error('接收 json 时发生异常')
+            reject(err) // 抛给上级
+        })
+        req.on('end', chunk => {
+            try {
+                const data = JSON.parse(body)
+                resolve(data)
+            } catch(err) {
+                console.error('解析 json 时发生异常')
+                reject(err)
+            }
+        })
+    })
+}
+```
