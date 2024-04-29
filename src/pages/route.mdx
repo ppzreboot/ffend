@@ -9,53 +9,54 @@ import { Code } from 'astro-expressive-code/components'
 import demo_code_1 from '../../demo/route/index.js?raw'
 import demo_code_2 from '../../demo/route/error.js?raw'
 
-### 前端的 route 和 router
+### 路由？是什么
 
-> 如果熟悉 route 和 router，建议跳过
+作为前端程序员，只要用过 Vue 或 React，那不会没见过 route、routes、router。
 
-作为前端程序员，只要用过 Vue 或 React，那不会不认识 route 和 router。
-
-**一个 route 是一组对应关系**，比如 `/user` 对应 “用户管理” 页面。
+一个 route 是**一组**对应关系，比如 `/user` 对应 “用户管理” 页面。
 下面是一个常见的 route：
 ``` js
 {
-  path: '/user',
-  component: User, // User 是一个 UI 组件
+    path: '/user',
+    component: User, // User 是一个 UI 组件
 }
 ```
 
-router 不容易理解，错误的说法是 <Wrong content='多组 route（对应关系）构成 router' />。
+解释为：当浏览器地址栏的路径是 `/user` 时，渲染 User 组件。
+多个 route 变成一个 route 数组，也就是 routes。
 
-看 Vue Router 官方文档里的[这个例子](https://router.vuejs.org/guide/#Creating-the-router-instance)：
-``` js
+routes 里只包含 “对应关系”，并不会监听地址栏变化、再渲染 xx 组件。
+这个功能由 router 承担。
+
+可参考 [Vue Router 官方文档的这段代码](https://router.vuejs.org/guide/#Creating-the-router-instance)，注意里面的变量命名：
+
+``` js /(vue-router)|(routes)|(router)/
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import HomeView from './HomeView.vue'
 import AboutView from './AboutView.vue'
 
-const routes = [ // 多个 route 不构成 router，仅仅是 route 的复数形式（route -> routes）
-  { path: '/', component: HomeView },
-  { path: '/about', component: AboutView },
+const routes = [
+    { path: '/', component: HomeView },
+    { path: '/about', component: AboutView },
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
-  routes, // router 里有 routes
+    history: createMemoryHistory(),
+    routes, // router 里有 routes
 })
 ```
-
-简单地说，router 是：
-+ 第一点：包含所有 routes 信息
-+ 第二点：（请先切换到面向对象思维）给 router 一个 path，router 可以返回一个 Component
-
 后端的 route 和 router 在概念、使用场景上，和前端是一样的。
 
-### 后端的 route 和 router
-类似地：
+### handler？是什么
+
+还有一个概念很重要 —— handler，它像前端的监听器：
 + 在前端，不同的按钮，有不同的 listener
 + 在后端，不同的请求，也有不同 handler（handle: 处理; handler: 处理器，处理者）
 
-作为前端程序员，我想你已经知道怎么区分请求，比如：
+### 后端路由
+
+作为前端程序员，肯定知道怎么区分请求，比如：
 + `GET /user` 可能是 “获取所有用户列表” 的请求
 + `GET /user?id=1` 可能是 “获取 id 为 1 的用户” 的请求
 + `POST /user` 可能是 “新增用户” 的请求
@@ -85,7 +86,7 @@ const router = createRouter({
 第 14-16 行，实际是起到一个 router 的作用，
 正经项目中的 router 尽管比这个复杂，但原理跟这两三行代码一样。
 
-第 18 行，从简易 “router” 那里得到 handle 后，
+第 18 行，从 “简易 router” 那里得到 handle 后，
 执行 handle，并把 req 和 res 对象传过去。
 
 第 24-29 行，封装了一个 “用于响应 json” 的函数。
@@ -136,28 +137,29 @@ const router = createRouter({
 前端程序员对下面的数据结构一定不陌生：
 ``` js mark={2}
 {
-  code: 0,
-  msg: 'success',
-  data: {
-    // ...
-  },
+    code: 0,
+    msg: 'success',
+    data: {
+        // ...
+    },
 }
 ```
 
 这里面的 code 和 msg 其实是 json 数据的一部分：
 ``` js mark={2}
 res.write(JSON.stringify({
-  code: 0,
-  msg: 'success',
-  data: {
-    // ...
-  },
+    code: 0,
+    msg: 'success',
+    data: {
+        // ...
+    },
 }))
 ```
 
 code 为 0 代表正确，非 0 代表错误，这在我头一回见时，觉得很奇怪：
 因为往往 0 代表 “假”、“错误”。
 但我细想，成功只有一种，错误却可能千奇百怪：用户少填字段、格式不正确……
+
 所以用 0 代表正确，用非 0 们代表各种各样的异常。
 
 或者，你把 code 当成 “错误码” 也行：那么 0 就是 “没有错误”。
