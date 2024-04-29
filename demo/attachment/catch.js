@@ -12,7 +12,7 @@ function read_json(req) {
             try {
                 const data = JSON.parse(body)
                 resolve(data)
-            } catch(err) {
+            } catch (err) {
                 console.error('解析 json 时发生异常')
                 reject(err)
             }
