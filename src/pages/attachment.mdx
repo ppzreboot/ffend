@@ -9,6 +9,7 @@ import { Code } from 'astro-expressive-code/components'
 import demo_code_1 from '../../demo/attachment/index.js?raw'
 import demo_code_2 from '../../demo/attachment/json.js?raw'
 import demo_code_3 from '../../demo/attachment/encapsulation.js?raw'
+import demo_code_4 from '../../demo/attachment/catch.js?raw'
 
 email 的附件功能很好用，
 附件可能是一个超级大的文件，
@@ -78,7 +79,7 @@ fetch('/user', {
 
 > axios 发送 json 时，当然也不例外。但 axios 封装程度较高，隐藏了一些细节，所以不好直接从代码观察。
 
-在后端，只要把收到的所有 “一小段” 拼接在一起就可以了：
+在后端，只要把收到的所有 “一小段” 们拼接在一起就可以了：
 
 <Code
     code={demo_code_2}
@@ -92,7 +93,7 @@ fetch('/user', {
 />
 
 而大多数 json 数据并不大，
-所以 `req.on('data', chunk => ...)``` 很多时候只执行一次。
+所以 `req.on('data', chunk => ...)` 很多时候只执行一次。
 
 ### 封装 read_json 函数
 可以把读取 json 的代码，写在一个函数里：
@@ -114,26 +115,13 @@ fetch('/user', {
 + 数据**解析时**出现异常（非法 json）
 
 于是可以给 read_json 加上异常处理代码：
-``` js ins={7-10,12,15-18}
-function read_json(req) {
-    return new Promise((resolve, reject) => {
-        let body = ''
-        req.on('data', chunk => {
-            body += chunk
-        })
-        req.on('error', err => {
-            console.error('接收 json 时发生异常')
-            reject(err) // 抛给上级
-        })
-        req.on('end', chunk => {
-            try {
-                const data = JSON.parse(body)
-                resolve(data)
-            } catch(err) {
-                console.error('解析 json 时发生异常')
-                reject(err)
-            }
-        })
-    })
-}
-```
+<Code
+    code={demo_code_4}
+    lang='js'
+    title='捕获 json 异常'
+    ins={[
+        { range: '7-10', label: '传输过程中' },
+        { range: '12', label: '解析 json 时' },
+        { range: '15-18' },
+    ]}
+/>

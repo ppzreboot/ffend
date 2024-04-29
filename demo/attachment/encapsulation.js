@@ -17,7 +17,7 @@ function read_json(req) {
         req.on('data', chunk => {
             body += chunk
         })
-        req.on('end', chunk => {
+        req.on('end', () => {
             const data = JSON.parse(body)
             resolve(data)
         })
